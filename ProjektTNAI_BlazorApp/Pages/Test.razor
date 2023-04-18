@@ -1,0 +1,71 @@
+﻿<h3>Test</h3>
+@page "/test"
+@using Microsoft.EntityFrameworkCore;
+@using Model.Entities;
+@using ProjektTNAI.Model;
+@using ProjektTNAI.Repository.Abstract;
+@using ProjektTNAI.Repository.Concrete;
+@inject ICategoryRepository categoryRepository
+@inject IActivityRepository activityRepository
+
+<PageTitle>Test</PageTitle>
+<AuthorizeView>
+@if (categories == null || activities == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categories)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Activities</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Category Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var activity in activities)
+            {
+                <tr>
+                    <td>@activity.Id</td>
+                    <td>@activity.Name</td>
+                    <td>@activity.Category.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+</AuthorizeView>
+
+@code {
+    private List<Category>? categories;
+    private List<Activity>? activities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //_categoryRepository = new CategoryRepository();
+        //categories = await _categoryRepository.GetAllCategoriesAsync();
+        categories = await categoryRepository.GetAllCategoriesAsync();
+        activities = await activityRepository.GetAllActivitiesAsync();
+    }
+}
